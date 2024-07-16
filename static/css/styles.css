@@ -206,7 +206,7 @@ footer {
 .bookshelf-discovery-section {
     text-align: center;
     max-width: 1200px; 
-    margin-top: 30px;
+    margin-top: 50px;
 }
 
 .bookshelf-section {
@@ -215,10 +215,18 @@ footer {
     padding: 20px; 
 }
 
+.bookshelf-section .row {
+    display: flex; 
+    flex-wrap: nowrap; 
+    margin-left: -10px; 
+    margin-right: -10px; 
+}
+
 .col-lg-4 {
     display: inline-block; 
     vertical-align: top;
     white-space: normal; 
+    width: auto;
 }
 
 .bookshelf-box {
@@ -227,26 +235,31 @@ footer {
     display: inline-block; 
     vertical-align: top;
     margin-right: 10px; 
-    background-color: #f8f9fa; 
-    border: 1px solid #ddd; 
+    border: 1.5px solid #c6c6c6; 
     padding: 20px;
     margin: 10px; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); 
     border-radius: 8px; 
-    text-align: center; 
+    text-align: center;
+}
+
+.box1 {
+    background: rgba(155, 122, 242, 0.2);
+    margin-right: 20px;
+}
+
+.box2 {
+    background: rgba(250, 227, 233, 0.3);
+    margin-right: 20px;
+}
+
+.box3 {
+    background: rgba(201, 218, 252, 0.2);
 }
 
 .bookshelf-discovery-section h1 {
     margin: 0 5% 0 5%;
     font-weight: bold;
-}
-
-
-.bookshelf-section .row {
-    display: flex; 
-    flex-wrap: nowrap; 
-    margin-left: -10px; 
-    margin-right: -10px; 
 }
 
 .bookshelf-box img.box-image {
@@ -822,27 +835,8 @@ footer {
 
     .bookshelf-box {
         margin: 20px; /* Adjust margin between boxes for large screens */
-    }
-}
+        width: auto;
+        
 
-/* Scrollable boxes on small screens */
-@media (max-width: 991px) {
-    .bookshelf-section {
-        overflow-x: auto; 
-        white-space: nowrap;
-    }
-
-    .col-lg-4 {
-        display: inline-block; 
-        vertical-align: top;
-        white-space: normal; 
-    }
-
-    .bookshelf-box {
-        width: 300px; 
-        height: 580px;
-        display: inline-block; 
-        vertical-align: top;
-        margin-right: 10px; 
     }
 }
