@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- homepage.html content starts here -->
+
+<!-- Title Banner -->
+<div class="container-fluid title-banner">
+    <div class="row w-100 remove-gutters">
+        <div class="col-lg-12">
+            <div class="banner-image">
+                <!-- Image for large screens -->
+                <img src="{% static 'images/reading-in-cozy-library.png' %}" class="banner-image d-none d-sm-block d-lg-none" alt="A women reading a book" aria-label="person reading a book">
+                <!-- Image for small screens -->
+                <img src="{% static 'images/man-reading-2.png' %}" class="banner-image d-block d-sm-none d-ls-block" alt="A man reading a book" aria-label="person reading a book">
+            </div>
+            <picture>
+                <!-- Source for large screens -->
+                <source media="(min-width: 600px)" srcset="{% static 'images/woman-purple-book.jpg' %}">
+                <!-- Source for small screens -->
+                <img src="{% static 'images/man-reading-6.jpg' %}" alt="Banner Image" class="banner-image">
+            </picture>
+            <div class="banner-text-box">
+                <h1>Welcome to BookTalk</h1>
+                <p>Browse Exciting Reads and Find Your Next Favorite Book</p>
+                <a href="{% url 'books' %}" class="btn btn-primary">See all books</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Discover banner-->
+<div class="container-fluid discover-banner">
+    <div class="row remove-gutters">
+        <div class="introduction-text">
+            <h2>Discover Your Next Adventure with BookTalk</h2>
+            <p>Join BookTalk and immerse yourself in a universe of stories. Discover new authors, interact with our expanding library, and keep track of your reading journey with ease</p>
+            {% if not user.is_authenticated %}
+                <a class="btn btn-primary" {% if request.path == signup_url %}active{% endif %} aria-current="page"
+                href="{% url 'account_signup' %}">Create an account now!</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Display books -->
+<div class="container-fluid display-books">
+    <div class="row">
+        <div class="container mt-5">
+            <h1 class="mb-4">Top Rated Books</h1>
+            <!-- If there are no books to display -->
+            {% if not book_list %}
+                <p>No books available at the moment.</p>
+            {% endif %}
+            <div class="row book-grid">
+                <!-- Create a card display for each book -->
+                {% for book in book_list %}
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <a href="{% url 'book_detail' book.slug %}" class="book-link no-underline">
+                                <div class="d-flex">
+                                    <!-- Use a default book cover image if it has no cover image in the database -->
+                                    <div class="image-container me-3">
+                                        {% if book.cover_image.url == 'https://res.cloudinary.com/dxtaxsd1v/image/upload/placeholder' %}
+                                        <img class="img-fluid" src="{% static 'images/book_default.jpg' %}" alt="placeholder Image" style="max-width: 100px;">
+                                        {% else %}
+                                        <img class="img-fluid" src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="max-width: 100px;">
+                                        {% endif %}
+                                    </div>
+                                    <!-- Display basic book details -->
+                                    <div class="flex-grow-1">
+                                        <h4 class="title mb-1">{{ book.title }}</h4>
+                                        <p class="author mb-1">Author: {{ book.author }}</p>
+                                        <p class="card-text text-muted h6 mb-0">Published in: {{ book.published_year }}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- See all books button -->
+            <div class="row">
+                <div class="col-12 text-center mt-4">
+                    <a href="{% url 'books' %}" class="btn btn-primary">See all books</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Missing any books section-->
+<div class="missingbook-banner">
+    <div class="row w-100 remove-gutters">
+        <div class="col-lg-12 d-flex p-0 image-position">
+            <div class="missing-image-container">
+                <img src="{% static 'images/books-logo-purple.png' %}" alt="Missing your favourite book image" class="missingbook-image-1">
+                <div class="missingbook-text-box">
+                    <h2>Missing Your Favourite Book?</h2>
+                    <p>No Problem! Send in your book recommendations so we can keep the BookTalk library up to date</p>
+                    <a href="{% url 'book_request' %}" class="btn btn-primary">Request a Book</a>
+                </div>
+            </div>
+            <div class="missing-image-container hidden-container">
+                <img src="{% static 'images/reading-with-cat.jpg' %}" alt="Missing your favourite book image" class="missingbook-image-2">
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

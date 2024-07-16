@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- book_list.html content starts here -->
+<div class="container-fluid display-books">
+    <div class="row">
+        <!-- Books section -->
+        <div class="container mt-5">
+            {% if query %}
+            <h1 class="mb-4">You Searched For: {{ query }}</h1>
+            {% else %}
+            <h1 class="mb-4"> Search Results</h1>
+            {% endif %}
+            <!-- If there are no books to display -->
+            {% if not book_list %}
+                <p>No books available that match your search.</p>
+            {% endif %}
+            <div class="row book-grid">
+                <!-- Create a card display for each book -->
+                {% for book in book_list %}
+                <!-- If only 1 book in book_list use full screen width -->
+                {% if book_list|length == 1 %}
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-4">
+                {% else %}
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                {% endif %}
+                    <div class="card">
+                        <div class="card-body">
+                            <a href="{% url 'book_detail' book.slug %}" class="book-link no-underline">
+                                <div class="d-flex">
+                                    <!-- Use a default book cover image if no image was uploaded so defaulted to placeholder -->
+                                    <div class="image-container me-3">
+                                        {% if book.cover_image.url == 'https://res.cloudinary.com/dxtaxsd1v/image/upload/placeholder' %}
+                                        <img class="img-fluid" src="https://res.cloudinary.com/dxtaxsd1v/image/upload/v1718572431/em43nwjwng89xzrgfdvq.jpg" alt="placeholder Image" style="max-width: 100px;">
+                                        {% else %}
+                                        <img class="img-fluid" src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="max-width: 100px;">
+                                        {% endif %}
+                                    </div>
+                                    <!-- Display basic book details -->
+                                    <div class="flex-grow-1">
+                                        <h4 class="title mb-1">{{ book.title }}</h4>
+                                        <p class="author mb-1">Author: {{ book.author }}</p>
+                                        <p class="card-text text-muted h6 mb-0">Published in: {{ book.published_year }}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Paginate books list so a max of 9 are displayed per page -->
+    <!-- set the max number in BookList view 'paginate_by = 9'-->
+    {% if book_list.paginator.num_pages > 1 %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <!-- If statement to display a previous button if required -->
+            {% if book_list.has_previous %}
+            <li>
+                <a href="?page={{ book_list.previous_page_number }}" class="page-link paginate-button"> &laquo; PREV </a>
+            </li>
+            {% endif %}
+
+            <!-- If statement to display a next button if required -->
+            {% if book_list.has_next %}
+            <li>
+                <a href="?page={{ book_list.next_page_number }}" class="page-link paginate-button"> NEXT &raquo;</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}     
+</div>
+
+{% endblock %}

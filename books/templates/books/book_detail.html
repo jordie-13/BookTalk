@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<div class="container mt-1">
+    <!-- Top left corner back button -->
+    <div class="return-button">
+        <button class="back-button" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+    </div>
+    <!-- Display book details -->
+    <div class="row">
+        <div class="col-md-4">
+            {% if book.cover_image.url == 'https://res.cloudinary.com/dxtaxsd1v/image/upload/placeholder' %}
+            <img class="img-fluid" src="https://res.cloudinary.com/dxtaxsd1v/image/upload/v1718572431/em43nwjwng89xzrgfdvq.jpg" alt="placeholder Image">
+            {% else %}
+            <img class="img-fluid" src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+            {% endif %}
+        </div>
+        <div class="col-md-8 mb-4">
+            <h1 class="title">{{ book.title }}</h1>   
+            <hr>
+            <div class="details">
+                <p><strong>Author:</strong> {{ book.author }}</p>
+                <p><strong>Genre:</strong> {{ book.genre }}</p>
+                <p><strong>Published Year:</strong> {{ book.published_year }}</p>
+                
+                <!-- Display books stars -->
+                <div class="book-star-ratings">
+                    <div class="star-ratings-background">
+                        <ul class="book-stars">
+                            <li><i class="far fa-star book-rating-icon"></i></li>
+                            <li><i class="far fa-star book-rating-icon"></i></li>
+                            <li><i class="far fa-star book-rating-icon"></i></li>
+                            <li><i class="far fa-star book-rating-icon"></i></li>
+                            <li><i class="far fa-star book-rating-icon"></i></li>
+                        </ul>
+                    </div>
+                    <div class="star-ratings-foreground">
+                        <ul class="book-stars">
+                            <li><i class="fa-star book-rating-star far" data-value="1"></i></li>
+                            <li><i class="fa-star book-rating-star far" data-value="2"></i></li>
+                            <li><i class="fa-star book-rating-star far" data-value="3"></i></li>
+                            <li><i class="fa-star book-rating-star far" data-value="4"></i></li>
+                            <li><i class="fa-star book-rating-star far" data-value="5"></i></li>
+                        </ul>    
+                    </div>            
+                </div>
+
+                <!-- Display books text rating -->
+                <div id="average-rating">
+                    {% if average_rating == None %}
+                        <p>No ratings</p>
+                    {% else %}
+                        {% if total_ratings == 1 %}
+                            <p>{{ average_rating }} from {{ total_ratings }} rating</p>
+                        {% else %}
+                            <p>{{ average_rating }} from {{ total_ratings }} ratings</p>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                <!--Add to Bookshelf-->
+                <div id="bookshelf-buttons">
+                    {% if request.user.is_authenticated %}
+                        {% if in_bookshelf %}
+                            <form action="{% url 'remove_from_bookshelf' book.slug %}" method="post">
+                                {% csrf_token %}
+                                <button id="remove-from-bookshelf" class="btn btn-primary" data-book-slug="{{ book.slug }}">Remove from Bookshelf</button>
+                            </form>
+                        {% else %}
+                            <form action="{% url 'add_to_bookshelf' book.slug %}" method="post">
+                                {% csrf_token %}
+                                <button id="add-to-bookshelf" class="btn btn-primary" data-book-slug="{{ book.slug }}">Add to Bookshelf</button>
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        <p>Please <a href="{% url 'account_login' %}">login</a> to add to your bookshelf.</p>
+                    {% endif %}
+                </div>
+
+                <hr>
+                <h3>Description</h3>
+                <p>{{ book.description|safe }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Interaction Section -->
+    <div class="user-interactions-container">
+        <!-- Comments Section -->
+        <div class="row mt-2">
+            <div class="col-12">
+                <hr>
+                <strong class="text-secondary">
+                    {% if comment_count == 1 %}
+                        <i class="far fa-comments"></i> {{ comment_count }} Comment
+                    {% else %}
+                        <i class="far fa-comments"></i> {{ comment_count }} Comments
+                    {% endif %}
+                </strong>
+            </div>
+        </div>
+        <div class="row gutters mt-3 d-flex align-items-stretch">
+            <div class="col-md-8 mb-3 comment-container">
+                <h3>Comments:</h3>
+                {% if comment_count == 0 %}
+                    <p>Be the first to leave a comment</p>
+                {% endif %}
+                {% for comment in comments %}
+                    <div class="comment-card mb-3 {% if not comment.approved and comment.user == user %} faded {% elif not comment.approved %} d-none {% endif %}">
+                        <div class="card-body">
+                            <p class="font-weight-bold">
+                                Author: {{ comment.user }}
+                            </p>
+                            <div id="comment{{ comment.id }}">
+                                {{ comment.body | linebreaks }}
+                            </div>
+                            <span class="font-weight-normal">Posted on {{ comment.created_on }}</span>
+                            {% if not comment.approved and comment.user == user %}
+                                <p class="text-warning">This comment is awaiting approval</p>
+                            {% endif %}
+                            {% if user.is_authenticated and comment.user == user %}
+                                <button class="btn btn-danger btn-delete" data-comment_id="{{ comment.id }}">Delete</button>
+                                <button class="btn btn-secondary btn-edit" data-comment_id="{{ comment.id }}">Edit</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Leave a Comment and Rating Form -->
+            <div class="col-md-4 d-flex flex-column">
+                <div class="add-comment-card mb-3 flex-grow-1">
+                    <div class="card-body">
+                        {% if user.is_authenticated %}
+                            <!-- Comment Section -->
+                            <h3>Leave a comment:</h3>
+                            <span><i class="far fa-user"></i> {{ user.username }}</span>
+                            <form id="commentForm" method="post">
+                                {{ comment_form | crispy }}
+                                {% csrf_token %}
+                                <button id="submitButton" type="submit" class="btn btn-primary btn-lg mt-2">Submit</button>
+                            </form>
+                            <!-- Rating Section -->
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <hr>
+                                    <strong>Please rate this book:</strong>
+                                    <div class="rating-stars mt-2">
+                                        <form id="ratingForm1" class="star-form" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="rating" value="1">
+                                            <button type="submit" class="far fa-star star-icon" data-value="1"></button>
+                                        </form>
+                                        <form id="ratingForm2" class="star-form" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="rating" value="2">
+                                            <button type="submit" class="far fa-star star-icon" data-value="2"></button>
+                                        </form>
+                                        <form id="ratingForm3" class="star-form" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="rating" value="3">
+                                            <button type="submit" class="far fa-star star-icon" data-value="3"></button>
+                                        </form>
+                                        <form id="ratingForm4" class="star-form" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="rating" value="4">
+                                            <button type="submit" class="far fa-star star-icon" data-value="4"></button>
+                                        </form>
+                                        <form id="ratingForm5" class="star-form" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="rating" value="5">
+                                            <button type="submit" class="far fa-star star-icon" data-value="5"></button>
+                                        </form>
+                                    </div>
+                                    
+
+                                    <div class="mt-2">
+                                        <p>Your rating: <span id="user-rating">{{ user_rating }}</span></p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        {% else %}
+                            <p>Log in to leave a comment and/or a rating</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" 
+    aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" 
+                  id="deleteModalLabel">Delete comment?</h5>
+                <button type="button" class="btn-close" 
+                  data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete your comment? 
+                This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" 
+                  data-bs-dismiss="modal">Close</button>
+                <a id="deleteConfirm" href="#" class="btn 
+                  btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extras %}
+<script src="{% static 'js/comments.js' %}"></script>
+<script src="{% static 'js/ratings.js' %}"></script>
+<script src="{% static 'js/back_button.js' %}"></script>
+{% endblock %}
