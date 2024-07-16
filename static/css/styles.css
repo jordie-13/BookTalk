@@ -209,6 +209,10 @@ footer {
     margin-top: 50px;
 }
 
+.bookshelf-discovery-section h4 {
+    margin-bottom: 20px;
+}
+
 .bookshelf-section {
     overflow-x: auto; 
     white-space: nowrap;
@@ -230,8 +234,8 @@ footer {
 }
 
 .bookshelf-box {
-    width: 300px; 
-    height: 580px;
+    max-width: 360px; 
+    height: 585px;
     display: inline-block; 
     vertical-align: top;
     margin-right: 10px; 
@@ -835,8 +839,6 @@ footer {
 
     .bookshelf-box {
         margin: 20px; /* Adjust margin between boxes for large screens */
-        width: auto;
-        
-
+        min-width: 290px;
     }
 }
