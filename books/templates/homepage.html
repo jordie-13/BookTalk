@@ -6,33 +6,51 @@
 
 <!-- Title Banner -->
 <div class="container-fluid title-banner">
-    <div class="row w-100 remove-gutters">
-        <div class="col-lg-12">
-            <picture>
-                <!-- Source for large screens -->
-                <source media="(min-width: 600px)" srcset="{% static 'images/reading-in-cozy-library.png' %}">
-                <!-- Source for small screens -->
-                <img src="{% static 'images/man-reading-2.png' %}" alt="Banner Image" class="banner-image">
-            </picture>
+    <div class="row w-100 remove-gutters align-items-center">
+        <div class="col-lg-6">
             <div class="banner-text-box">
-                <h1>Welcome to BookTalk</h1>
-                <p>Browse Exciting Reads and Find Your Next Favorite Book</p>
-                <a href="{% url 'books' %}" class="btn btn-primary">See all books</a>
+                <h1><strong>Your Personal Library, Anywhere, Anytime</strong></h1>
+                <p>Sign up today and start tracking your reading journey. Create and Curate 
+                    your personal bookshelf. Discover new reads and help others in the 
+                    community by sharing reviews and ratings on your favourite books.
+                </p>               
+                <a href="{% url 'account_signup' %}" class="btn btn-primary">Sign up for free</a>
             </div>
+        </div>
+        <div class="col-lg-6">
+            <picture>
+                <img src="{% static 'images/cover-image.jpg' %}" alt="Banner Image" class="banner-image">
+            </picture>
         </div>
     </div>
 </div>
 
-<!--Discover banner-->
-<div class="container-fluid discover-banner">
-    <div class="row remove-gutters">
-        <div class="introduction-text">
-            <h2>Discover Your Next Adventure with BookTalk</h2>
-            <p>Join BookTalk and immerse yourself in a universe of stories. Discover new authors, interact with our expanding library, and keep track of your reading journey with ease</p>
-            {% if not user.is_authenticated %}
-                <a class="btn btn-primary" {% if request.path == signup_url %}active{% endif %} aria-current="page"
-                href="{% url 'account_signup' %}">Create an account now!</a>
-            {% endif %}
+<!--Discover the bookshelf banner-->
+<div class="container-fluid bookshelf-discovery-section">
+    <h1>Discover the Power of Your Bookshelf</h1>
+    <div class="bookshelf-section">
+        <div class="row w-100 remove-gutters">
+            <div class="col-lg-4">
+                <div class="bookshelf-box">
+                    <img src="{% static 'images/digital-shelf.jpg' %}" alt="bookshelf on a mobile screen" class="box-image">
+                    <h2>All Your Books in One Place</h2>
+                    <p>With BookTalk, your bookshelf is more than just a list of titles. It's a comprehensive record of your reading journey. Store all the books you have read, are currently reading, and want to read in the future, all in one easy-to-access spot.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="bookshelf-box">
+                    <img src="{% static 'images/reading.jpg' %}" alt="lady reading a book" class="box-image">
+                    <h2>Personalize Your Reading Experience</h2>
+                    <p>Add personal notes for each book to capture your thoughts, insights, and memorable quotes. Your notes are stored forever, making it easy to revisit and reflect on your reading experience whenever you want.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="bookshelf-box">
+                    <img src="{% static 'images/organised.jpg' %}" alt="organised calendar" class="box-image">
+                    <h2>Stay Organized and Inspired</h2>
+                    <p>Keep your reading life organized and inspire others by sharing your bookshelf and notes. Whether you're a casual reader or a dedicated bookworm, BookTalk helps you make the most of your reading journey.</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
