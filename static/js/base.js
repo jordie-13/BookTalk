@@ -1,6 +1,5 @@
-// Automatically close messages after 3 seconds
 document.addEventListener("DOMContentLoaded", function() {
-    
+    // Automatically close messages after 3 seconds
     setTimeout(function() {
         console.log("Timeout function executed.");
         
@@ -11,4 +10,9 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }, 3000);
 
+    // Toggle search form visibility
+    document.querySelector('.search-icon').addEventListener('click', function() {
+        var form = document.querySelector('.form-inline');
+        form.classList.toggle('show');
+    });
 });

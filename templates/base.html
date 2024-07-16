@@ -32,67 +32,60 @@
 <body>
     <header>
         <!-- Nav Bar -->
-        <nav class="navbar navbar-expand-lg navbar-dark">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand navbar-brand-custom" href="{{ home_url }}">
-                <img src="{% static 'images/book-talk-logo.png' %}" alt='BookTalk' class="logo">
+                BookTalk
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarText">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav mx-auto navbar-nav-center">
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == home_url %}active" aria-current="page{% endif %}" 
-                        href="{{ home_url }}">Home</a>
+                        <a class="nav-link {% if request.path == home_url %}active{% endif %}" href="{{ home_url }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == books_url %}active" aria-current="page{% endif %}"
-                        href="{{ books_url }}">Books</a>
+                        <a class="nav-link {% if request.path == books_url %}active{% endif %}" href="{{ books_url }}">Books</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == book_request_url %}active{%endif%}"
-                          aria-current="page" href="{% url 'book_request' %}">Request a Book</a>
+                        <a class="nav-link {% if request.path == book_request_url %}active{% endif %}" href="{% url 'book_request' %}">Request a Book</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == about_us_url %}active{%endif%}"
-                          aria-current="page" href="{% url 'about_us' %}">About Us</a>
+                        <a class="nav-link {% if request.path == about_us_url %}active{% endif %}" href="{% url 'about_us' %}">About Us</a>
                     </li>
                 </ul>
 
-                <!-- Search Form -->
-                <form class="form-inline my-2 my-lg-0" method="GET" action="{% url 'search_books' %}">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query">
-                </form>
-
-                <hr>
-
-                <!-- Profile Icon and Login, out and register -->
-                <div class="d-flex">
-                    <ul class="navbar-nav">
+                <!-- Moved to the right -->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <i class="fas fa-search search-icon"></i>
+                    </li>
+                    <li class="nav-item">
+                        <form class="form-inline my-2 my-lg-0" method="GET" action="{% url 'search_books' %}">
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query">
+                        </form>
+                    </li>
+                    <li class="nav-item">
                         {% if user.is_authenticated %}
-                        <li class="nav-item profile-icon">
-                            <a class="nav-link {% if request.path == profile_page_url %}active" aria-current="page{% endif %}" 
-                            href="{{ profile_page_url }}">
-                                <i class="fas fa-user"></i> <!-- Profile icon -->
-                            </a>
+                        <a class="nav-link {% if request.path == profile_page_url %}active{% endif %}" href="{{ profile_page_url }}">
+                            <i class="fas fa-user"></i> <!-- Profile icon -->
+                        </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == logout_url %}active{% endif %}" aria-current="page" href="{% url 'account_logout' %}">Logout</a>
+                            <a class="nav-link {% if request.path == logout_url %}active{% endif %}" href="{% url 'account_logout' %}">Logout</a>
                         </li>
                         {% else %}
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == signup_url %}active{% endif %}" aria-current="page"
-                                href="{% url 'account_signup' %}">Register</a>
+                            <a class="nav-link {% if request.path == signup_url %}active{% endif %}" href="{% url 'account_signup' %}">Register</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == login_url %}active{% endif %}" aria-current="page" href="{% url 'account_login' %}">Login</a>
+                            <a class="nav-link {% if request.path == login_url %}active{% endif %}" href="{% url 'account_login' %}">Login</a>
                         </li>
                         {% endif %}
                     </ul>
                 </div>
-            </div>
-        </nav>
-    </header>
+            </nav>
+        </header>
     
     <!-- displaying Django messages -->
     <div class="container">
