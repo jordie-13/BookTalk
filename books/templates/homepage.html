@@ -8,17 +8,11 @@
 <div class="container-fluid title-banner">
     <div class="row w-100 remove-gutters">
         <div class="col-lg-12">
-            <div class="banner-image">
-                <!-- Image for large screens -->
-                <img src="{% static 'images/reading-in-cozy-library.png' %}" class="banner-image d-none d-sm-block d-lg-none" alt="A women reading a book" aria-label="person reading a book">
-                <!-- Image for small screens -->
-                <img src="{% static 'images/man-reading-2.png' %}" class="banner-image d-block d-sm-none d-ls-block" alt="A man reading a book" aria-label="person reading a book">
-            </div>
             <picture>
                 <!-- Source for large screens -->
-                <source media="(min-width: 600px)" srcset="{% static 'images/woman-purple-book.jpg' %}">
+                <source media="(min-width: 600px)" srcset="{% static 'images/reading-in-cozy-library.png' %}">
                 <!-- Source for small screens -->
-                <img src="{% static 'images/man-reading-6.jpg' %}" alt="Banner Image" class="banner-image">
+                <img src="{% static 'images/man-reading-2.png' %}" alt="Banner Image" class="banner-image">
             </picture>
             <div class="banner-text-box">
                 <h1>Welcome to BookTalk</h1>
