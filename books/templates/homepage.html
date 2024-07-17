@@ -38,7 +38,12 @@
     <h1>Virtual Bookshelves</h1>
     <br>
     <h4>Discover the power of creating and curating your own virtual bookshelf</h4>
+    {% if user.is_authenticated %}
+    <a href="{{ profile_page_url }}" class="btn btn-primary">Open My Bookshelf</a>
+    {% else %}
     <a href="{% url 'account_signup' %}" class="btn btn-primary">Create an account</a>
+    {% endif %}
+
     <div class="bookshelf-section">
         <div class="row w-100 remove-gutters">
             <div class="col-lg-4">
@@ -66,7 +71,9 @@
     </div>
 </div>
 
-<!-- Display books -->
+
+<!-- Display books for authenticated user -->
+{% if user.is_authenticated %}
 <div class="container-fluid display-books">
     <div class="row">
         <div class="container mt-5">
@@ -117,7 +124,36 @@
     </div>
 </div>
 
-<!--Missing any books section-->
+{% else %}         
+                  
+<div class="container-fluid books-banner">
+    <div class="row w-100 remove-gutters align-items-center">
+        
+        <div class="col-lg-6">
+            <div class="banner-text-box books-text">
+                <h1><strong>Find your next Read</strong></h1>
+                <p>Dive into our extensive collection and explore detailed reviews and ratings from our vibrant
+                    community of readers. Use our personalized recommendation engine to find books tailored to
+                     your tastes and join the conversation by sharing your own insights.
+                </p>               
+                <a href="{{ books_url }}" class="btn btn-primary">See all Books</a>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <picture>
+                <img src="{% static 'images/phone-shelf.jpg' %}" alt="digital bookshelf image" class="banner-image">
+            </picture>
+        </div>
+    </div>
+</div>
+
+
+
+{% endif %}
+
+
+<!-- Missing any books section for authenticated user -->
+{% if user.is_authenticated %}
 <div class="missingbook-banner">
     <div class="row w-100 remove-gutters">
         <div class="col-lg-12 d-flex p-0 image-position">
@@ -135,5 +171,6 @@
         </div>
     </div>
 </div>
+{% endif %}
 
 {% endblock %}

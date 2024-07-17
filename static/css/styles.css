@@ -238,7 +238,6 @@ footer {
     height: 585px;
     display: inline-block; 
     vertical-align: top;
-    margin-right: 10px; 
     border: 1.5px solid #c6c6c6; 
     padding: 20px;
     margin: 10px; 
@@ -282,6 +281,16 @@ footer {
     font-size: 1rem; /* Adjust font size for paragraph */
 }
 
+/* Books banner section */
+.books-banner {
+    max-width: 1200px;
+    margin-top: 30px;
+    padding-top: 10px;
+}
+
+.books-banner img {
+    max-height: 500px;
+}
 
 /* Missing any books styles */
 .missingbook-banner {
@@ -716,15 +725,12 @@ footer {
     .col-lg-6 {
         flex: 0 0 50%;
         max-width: 50%; 
+        display: flex;
+        justify-content: center;
     }
 
     .banner-text-box {
-        text-align: left; 
         padding: 0px 30px 0px 30px;
-        display: flex; 
-        flex-direction: column; 
-        justify-content: center; 
-        align-items: center; 
         text-align: center; 
     }
 
@@ -850,5 +856,9 @@ footer {
     .bookshelf-box {
         margin: 20px; /* Adjust margin between boxes for large screens */
         min-width: 290px;
+    }
+  
+    .books-text {
+        margin: 10px 4% 30px 4%;
     }
 }
