@@ -332,6 +332,15 @@ footer {
 /* list of displayed books section */
 .display-books {
     max-width: 1200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.display-books p {
+    max-width: 800px;
+    align-self: center;
 }
 
 .no-underline {
