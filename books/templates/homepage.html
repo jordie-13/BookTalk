@@ -25,14 +25,6 @@
     </div>
 </div>
 
-<!-- Icons section -->
-<div class="container-fluid icons-section">
-    
-
-</div>
-
-
-
 <!-- Discover the bookshelf banner -->
 <div class="container-fluid bookshelf-discovery-section">
     <h1>Virtual Bookshelves</h1>
@@ -77,10 +69,12 @@
 <div class="container-fluid display-books">
     <div class="row">
         <div class="container mt-5">
-            <h1 class="mb-4"><strong>Find your next Read</strong></h1>
-            <p>Dive into our extensive collection and explore detailed reviews and ratings from our vibrant
-                 community of readers. Use our personalized recommendation engine to find books tailored to
-                  your tastes and join the conversation by sharing your own insights.</p>
+            <div class="display-text">
+                <h1 class="mb-4"><strong>Find your next Read</strong></h1>
+                <p>Dive into our extensive collection and explore detailed reviews and ratings from our vibrant
+                    community of readers. Use our personalized recommendation engine to find books tailored to
+                    your tastes and join the conversation by sharing your own insights.</p>
+            </div>
             <!-- If there are no books to display -->
             {% if not book_list %}
                 <p>No books available at the moment.</p>
@@ -123,9 +117,7 @@
         </div>
     </div>
 </div>
-
-{% else %}         
-                  
+{% else %}                      
 <div class="container-fluid books-banner">
     <div class="row w-100 remove-gutters align-items-center">
         
@@ -146,28 +138,26 @@
         </div>
     </div>
 </div>
-
-
-
 {% endif %}
 
 
 <!-- Missing any books section for authenticated user -->
 {% if user.is_authenticated %}
-<div class="missingbook-banner">
-    <div class="row w-100 remove-gutters">
-        <div class="col-lg-12 d-flex p-0 image-position">
-            <div class="missing-image-container">
-                <img src="{% static 'images/books-logo-purple.png' %}" alt="Missing your favourite book image" class="missingbook-image-1">
-                <div class="missingbook-text-box">
-                    <h2>Missing Your Favourite Book?</h2>
-                    <p>No Problem! Send in your book recommendations so we can keep the BookTalk library up to date</p>
-                    <a href="{% url 'book_request' %}" class="btn btn-primary">Request a Book</a>
-                </div>
+<div class="container-fluid books-banner">
+    <div class="row w-100 remove-gutters align-items-center">
+        <div class="col-lg-6">
+            <div class="banner-text-box books-text">
+                <h1><strong>Missing Your Favourite Book?</strong></h1>
+                <p>No Problem! Send in your book recommendations so we can keep 
+                    the BookTalk library up to date
+                </p>               
+                <a href="{% url 'book_request' %}" class="btn btn-primary">Request a Book</a>
             </div>
-            <div class="missing-image-container hidden-container">
-                <img src="{% static 'images/reading-with-cat.jpg' %}" alt="Missing your favourite book image" class="missingbook-image-2">
-            </div>
+        </div>
+        <div class="col-lg-6">
+            <picture>
+                <img src="{% static 'images/phone-shelf.jpg' %}" alt="digital bookshelf image" class="banner-image">
+            </picture>
         </div>
     </div>
 </div>

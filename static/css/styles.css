@@ -273,12 +273,12 @@ footer {
 }
 
 .bookshelf-box h2 {
-    font-size: 1.5rem; /* Adjust font size for heading */
-    margin-bottom: 10px; /* Adjust margin below heading */
+    font-size: 1.5rem; 
+    margin-bottom: 10px; 
 }
 
 .bookshelf-box p {
-    font-size: 1rem; /* Adjust font size for paragraph */
+    font-size: 1rem; 
 }
 
 /* Books banner section */
@@ -347,9 +347,9 @@ footer {
     text-align: center;
 }
 
-.display-books p {
+.display-text {
     max-width: 800px;
-    align-self: center;
+    display: inline-block;
 }
 
 .no-underline {
@@ -365,12 +365,21 @@ footer {
     border: 2px solid #161616; 
 }
 
+.book-grid {
+    display: inline-grid;
+}
+
 .card {
-    border: 2px solid #698681;
-    background-color: #eeebec;
+    border: 2px solid rgba(154, 121, 238, 0.2);
+    background-color: rgba(250, 227, 233, 0.35);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); 
     min-height: 190px;
     position: relative;
     max-width: 600px;
+}
+
+.card:hover {
+    transform: scale(1.04);
 }
 
 .card-body { 
@@ -737,6 +746,11 @@ footer {
     .banner-image {
         max-width: 100%; 
         float: right; 
+    }
+
+    /* Homepage Books display styles */
+    .book-grid {
+        display: flex;
     }
 
     /* Homepage Missing any books styles */
