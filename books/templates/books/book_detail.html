@@ -13,10 +13,10 @@
     <!-- Display book details -->
     <div class="row">
         <div class="col-md-4">
-            {% if book.cover_image.url == 'https://res.cloudinary.com/dxtaxsd1v/image/upload/placeholder' %}
-            <img class="img-fluid" src="https://res.cloudinary.com/dxtaxsd1v/image/upload/v1718572431/em43nwjwng89xzrgfdvq.jpg" alt="placeholder Image">
+            {% if book.cover_image.url == 'https://res.cloudinary.com/dmnnucsdm/image/upload/placeholder' %}
+                <img class="img-fluid" src="{% static 'images/book_default.jpg' %}" alt="placeholder Image">
             {% else %}
-            <img class="img-fluid" src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                <img class="img-fluid" src="{{ book.cover_image.url }}" alt="{{ book.title }}">
             {% endif %}
         </div>
         <div class="col-md-8 mb-4">
@@ -68,12 +68,12 @@
                         {% if in_bookshelf %}
                             <form action="{% url 'remove_from_bookshelf' book.slug %}" method="post">
                                 {% csrf_token %}
-                                <button id="remove-from-bookshelf" class="btn btn-primary" data-book-slug="{{ book.slug }}">Remove from Bookshelf</button>
+                                <button id="remove-from-bookshelf" class="btn btn-secondary" data-book-slug="{{ book.slug }}">Remove from Bookshelf</button>
                             </form>
                         {% else %}
                             <form action="{% url 'add_to_bookshelf' book.slug %}" method="post">
                                 {% csrf_token %}
-                                <button id="add-to-bookshelf" class="btn btn-primary" data-book-slug="{{ book.slug }}">Add to Bookshelf</button>
+                                <button id="add-to-bookshelf" class="btn btn-secondary" data-book-slug="{{ book.slug }}">Add to Bookshelf</button>
                             </form>
                         {% endif %}
                     {% else %}
@@ -142,7 +142,7 @@
                             <form id="commentForm" method="post">
                                 {{ comment_form | crispy }}
                                 {% csrf_token %}
-                                <button id="submitButton" type="submit" class="btn btn-primary btn-lg mt-2">Submit</button>
+                                <button id="submitButton" type="submit" class="btn btn-secondary btn-lg mt-2">Submit</button>
                             </form>
                             <!-- Rating Section -->
                             <div class="row mt-4">

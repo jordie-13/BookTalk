@@ -42,10 +42,10 @@
                                 <div class="d-flex">
                                     <!-- Use a default book cover image if no image was uploaded so defaulted to placeholder -->
                                     <div class="image-container me-3">
-                                        {% if book.cover_image.url == 'https://res.cloudinary.com/dxtaxsd1v/image/upload/placeholder' %}
-                                        <img class="img-fluid" src="https://res.cloudinary.com/dxtaxsd1v/image/upload/v1718572431/em43nwjwng89xzrgfdvq.jpg" alt="placeholder Image" style="max-width: 100px;">
+                                        {% if book.cover_image.url == 'https://res.cloudinary.com/dmnnucsdm/image/upload/placeholder' %}
+                                            <img class="img-fluid" src="{% static 'images/book_default.jpg' %}" alt="placeholder Image" style="max-width: 100px;">
                                         {% else %}
-                                        <img class="img-fluid" src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="max-width: 100px;">
+                                            <img class="img-fluid" src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="max-width: 100px;">
                                         {% endif %}
                                     </div>
                                     <!-- Display basic book details -->
