@@ -71,7 +71,7 @@ def Homepage(request):
     top_rated_books = (
         Book.objects.annotate(average_rating=Avg('rater__rating'), rating_count=Count('rater__rating'))
         .filter(rating_count__gt=0) 
-        .order_by('-average_rating')[:6]
+        .order_by('-average_rating')[:20]
     )
     context = {'book_list': top_rated_books}
     return render(request, 'homepage.html', context)

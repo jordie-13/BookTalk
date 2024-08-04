@@ -5,16 +5,26 @@
 <!-- homepage.html content starts here -->
 
 <!-- Title Banner -->
-<div class="container-fluid title-banner">
+<div class="container-fluid title-banner mb-5">
     <div class="row w-100 remove-gutters align-items-center">
         <div class="col-lg-6">
             <div class="banner-text-box">
+                {% if user.is_authenticated %}
+                <h1><strong>Your Personal Library, Anywhere, Anytime</strong></h1>
+                <p>Continue mapping and tracking your reading journey with your personal bookshelf. 
+                    Discover new reads and help others in the community by sharing reviews and 
+                    ratings on your favourite books.
+                </p>  
+                <a href="{% url 'profile' %}" class="btn btn-primary">Open My Bookshelf</a>
+                {% else %}
                 <h1><strong>Your Personal Library, Anywhere, Anytime</strong></h1>
                 <p>Sign up today and start tracking your reading journey. Create and Curate 
                     your personal bookshelf. Discover new reads and help others in the 
                     community by sharing reviews and ratings on your favourite books.
-                </p>               
+                </p>  
                 <a href="{% url 'account_signup' %}" class="btn btn-primary">Sign up for free</a>
+                {% endif %}             
+                
             </div>
         </div>
         <div class="col-lg-6">
@@ -26,16 +36,17 @@
 </div>
 
 <!-- Discover the bookshelf banner -->
+{% if not user.is_authenticated %}
 <div class="container-fluid bookshelf-discovery-section">
-    <h1>Virtual Bookshelves</h1>
-    <br>
+    <h2><strong>Virtual Bookshelves</strong></h2>
     <h4>Discover the power of creating and curating your own virtual bookshelf</h4>
-    {% if user.is_authenticated %}
-    <a href="{{ profile_page_url }}" class="btn btn-primary">Open My Bookshelf</a>
-    {% else %}
-    <a href="{% url 'account_signup' %}" class="btn btn-primary">Create an account</a>
-    {% endif %}
-
+    <div class="bookshelf-btn1">
+        {% if user.is_authenticated %}
+        <a href="{{ profile_page_url }}" class="btn btn-primary">Open My Bookshelf</a>
+        {% else %}
+        <a href="{% url 'account_signup' %}" class="btn btn-primary">Create an account</a>
+        {% endif %}
+    </div>
     <div class="bookshelf-section">
         <div class="row w-100 remove-gutters">
             <div class="col-lg-4">
@@ -61,53 +72,84 @@
             </div>
         </div>
     </div>
+    <div class="bookshelf-btn2">
+        {% if user.is_authenticated %}
+        <a href="{{ profile_page_url }}" class="btn btn-primary">Open My Bookshelf</a>
+        {% else %}
+        <a href="{% url 'account_signup' %}" class="btn btn-primary">Create an account</a>
+        {% endif %}
+    </div>
 </div>
+{% endif %}
 
 
-<!-- Display books for authenticated user -->
-{% if user.is_authenticated %}
-<div class="container-fluid display-books">
-    <div class="row">
-        <div class="container mt-5">
+<!-- Display books for all user -->
+<div class="home-display-books">
+    <div class="row w-100">
+        <div class="container mt-4 mb-4">
             <div class="display-text">
-                <h1 class="mb-4"><strong>Find your next Read</strong></h1>
+                <h2 class="mb-4"><strong>Find your next Read</strong></h2>
                 <p>Dive into our extensive collection and explore detailed reviews and ratings from our vibrant
                     community of readers. Use our personalized recommendation engine to find books tailored to
                     your tastes and join the conversation by sharing your own insights.</p>
             </div>
-            <!-- If there are no books to display -->
-            {% if not book_list %}
-                <p>No books available at the moment.</p>
-            {% endif %}
-            <div class="row book-grid">
-                <!-- Create a card display for each book -->
-                {% for book in book_list %}
-                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <a href="{% url 'book_detail' book.slug %}" class="book-link no-underline">
-                                <div class="d-flex">
-                                    <!-- Use a default book cover image if it has no cover image in the database -->
-                                    <div class="image-container me-3">
-                                        {% if book.cover_image.url == 'https://res.cloudinary.com/dxtaxsd1v/image/upload/placeholder' %}
-                                        <img class="img-fluid" src="{% static 'images/book_default.jpg' %}" alt="placeholder Image" style="max-width: 100px;">
-                                        {% else %}
-                                        <img class="img-fluid" src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="max-width: 100px;">
-                                        {% endif %}
-                                    </div>
-                                    <!-- Display basic book details -->
-                                    <div class="flex-grow-1">
-                                        <h4 class="title mb-1">{{ book.title }}</h4>
-                                        <p class="author mb-1">Author: {{ book.author }}</p>
-                                        <p class="card-text text-muted h6 mb-0">Published in: {{ book.published_year }}</p>
-                                    </div>
+
+            <div class="book-carousel">
+                <div class="books-slider">
+                    <!-- Left arrow -->
+                    <div class="book-arrow left" onclick="scrollBooks('left')">&#8249;</div>
+                    <!-- Book grid -->
+                    <div class="home-book-grid">
+                        <!-- If there are no books to display -->
+                        {% if not book_list %}
+                            <p>No books available at the moment.</p>
+                        {% endif %}
+                        <!-- Create a card display for each book -->
+                        {% for book in book_list %}
+                        <div class="book-order">
+                            <div class="home-card">
+                                <div class="home-card-body">
+                                    <a href="{% url 'book_detail' book.slug %}" class="book-link no-underline">
+                                        <div class="d-grid">
+                                            <div class="card-head d-flex">
+                                                <div class="card-head-text">
+                                                    <!-- Display books text rating -->
+                                                    <div id="average-rating">
+                                                        {% if book.average_rating == None %}
+                                                            <p>No ratings</p>
+                                                        {% else %}
+                                                            <p><i class="fas fa-star card-star-icon"></i> {{ book.average_rating }}</p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Use a default book cover image if it has no cover image in the database -->
+                                            <div class="book-cover-container mt-2 mb-2">
+                                                {% if book.cover_image.url == 'https://res.cloudinary.com/dmnnucsdm/image/upload/placeholder' %}
+                                                <img class="img-fluid" src="{% static 'images/book_default.jpg' %}" alt="placeholder Image" style="max-width: 100px;">
+                                                {% else %}
+                                                <img class="img-fluid" src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="max-width: 100px;">
+                                                {% endif %}
+                                            </div>
+                                            <!-- Display basic book details -->
+                                            <div class="card-foot flex-grow-1">
+                                                <div class="card-foot-text">
+                                                    <p class="home-title mb-1">{{ book.title }}</p>
+                                                    <p class="home-author mb-1">- {{ book.author }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
-                            </a>
+                            </div>
                         </div>
+                        {% endfor %}
                     </div>
+                    <!-- Right arrow -->
+                    <div class="book-arrow right" onclick="scrollBooks('right')">&#8250;</div>
                 </div>
-                {% endfor %}
             </div>
+
             <!-- See all books button -->
             <div class="row">
                 <div class="col-12 text-center mt-4">
@@ -117,28 +159,7 @@
         </div>
     </div>
 </div>
-{% else %}                      
-<div class="container-fluid books-banner">
-    <div class="row w-100 remove-gutters align-items-center">
-        
-        <div class="col-lg-6">
-            <div class="banner-text-box books-text">
-                <h1><strong>Find your next Read</strong></h1>
-                <p>Dive into our extensive collection and explore detailed reviews and ratings from our vibrant
-                    community of readers. Use our personalized recommendation engine to find books tailored to
-                     your tastes and join the conversation by sharing your own insights.
-                </p>               
-                <a href="{{ books_url }}" class="btn btn-primary">See all Books</a>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <picture>
-                <img src="{% static 'images/phone-shelf.jpg' %}" alt="digital bookshelf image" class="banner-image">
-            </picture>
-        </div>
-    </div>
-</div>
-{% endif %}
+
 
 
 <!-- Missing any books section for authenticated user -->
@@ -161,6 +182,41 @@
         </div>
     </div>
 </div>
+
+{% else %}
+<div class="container-fluid features-banner">
+    <div class="row w-100 remove-gutters align-items-center">
+        <div class="col-lg-6 features-img">
+            <picture>
+                <img src="{% static 'images/reading-in-chair-rec.jpg' %}" alt="digital bookshelf image" class="banner-image">
+            </picture>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="banner-text-box books-text">
+                <ul class="feature-item">                
+                    <h5><strong>Explore an endless library of books</strong></h5>
+                    <p>Enjoy an ever expanding inventory of books. everything for old classics
+                        through to the latest releases.  
+                    </p>     
+                </ul>
+                <ul class="feature-item">                
+                    <h5><strong>Rate, review and discuss</strong></h5>
+                    <p>Help the community that helps you by leaving reviews and ratings
+                        on your favourite books.  
+                    </p>
+                </ul>          
+                <ul class="feature-item">                
+                    <h5><strong>Free to use</strong></h5>
+                    <p>No sign up or subscription fees ever! and if your BookTalk is not 
+                        for you simply delete your free account. 
+                    </p>
+                </ul>
+            </div>           
+        </div>
+    </div>
+</div>
+
 {% endif %}
 
 {% endblock %}

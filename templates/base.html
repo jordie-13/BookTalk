@@ -40,6 +40,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarText">
+                <hr>
                 <ul class="navbar-nav mx-auto navbar-nav-center">
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == home_url %}active{% endif %}" href="{{ home_url }}">Home</a>
@@ -54,6 +55,7 @@
                         <a class="nav-link {% if request.path == about_us_url %}active{% endif %}" href="{% url 'about_us' %}">About Us</a>
                     </li>
                 </ul>
+                <hr>
 
                 <!-- Moved to the right -->
                 <ul class="navbar-nav">
@@ -167,6 +169,9 @@
 
     <!-- Base JS -->
     <script src="{% static 'js/base.js' %}"></script>
+
+    <!-- Homepage JS -->
+    <script src="{% static 'js/homepage.js' %}"></script>
 
     {% block extras %}
     {% endblock %}
