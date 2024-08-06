@@ -8,6 +8,7 @@
 {% url 'homepage' as home_url %}
 {% url 'book_request' as book_request_url %}
 {% url 'profile' as profile_page_url %}
+{% url 'bookshelf' as bookshelf_url %}
 
 
 <!DOCTYPE html>
@@ -67,27 +68,33 @@
                             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query">
                         </form>
                     </li>
+                        
+                    {% if user.is_authenticated %}
                     <li class="nav-item">
-                        {% if user.is_authenticated %}
                         <a class="nav-link {% if request.path == profile_page_url %}active{% endif %}" href="{{ profile_page_url }}">
                             <i class="fas fa-user"></i> <!-- Profile icon -->
                         </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.path == logout_url %}active{% endif %}" href="{% url 'account_logout' %}">Logout</a>
-                        </li>
-                        {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.path == login_url %}active{% endif %}" href="{% url 'account_login' %}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.path == signup_url %}active{% endif %}" href="{% url 'account_signup' %}">Sign up</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </nav>
-        </header>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == bookshelf_url %}active{% endif %}" href="{{ bookshelf_url }}">
+                            <i class="fas fa-book"></i> <!-- Book icon -->
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == logout_url %}active{% endif %}" href="{% url 'account_logout' %}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == login_url %}active{% endif %}" href="{% url 'account_login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == signup_url %}active{% endif %}" href="{% url 'account_signup' %}">Sign up</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </header>
     
     <!-- displaying Django messages -->
     <div class="container">
