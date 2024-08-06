@@ -327,8 +327,47 @@ def remove_from_bookshelf(request, slug):
 
     return HttpResponseRedirect(referer_url)
 
+
 @login_required
 def bookshelf(request):
     bookshelf = Bookshelf.objects.filter(user=request.user)
+
+    # Post request in status form 
+    if request.method == 'POST' and 'status_form' in request.POST:
+        book_slug = request.POST.get('book_slug')
+        status = request.POST.get('status')
+        book = get_object_or_404(Book, slug=book_slug)
+        bookshelf = get_object_or_404(Bookshelf, book=book, user=request.user)
+        bookshelf.status = status
+        bookshelf.save()
+        return redirect('bookshelf')
     
-    return render(request, 'profile_page.html', {'bookshelf': bookshelf})
+    bookshelf = Bookshelf.objects.filter(user=request.user)
+    status_choices = Bookshelf.STATUS_CHOICES
+    books_in_bookshelf = Book.objects.filter(bookshelf__in=bookshelf)
+    
+    # Prepare a list of dictionaries with book and status
+    books_with_status = []
+    for entry in bookshelf:
+        books_with_status.append({
+            'book': entry.book,
+            'status': entry.get_status_display(),
+        })
+    
+    # Pagination
+    paginator = Paginator(books_in_bookshelf, 4)
+    page = request.GET.get('page')
+    try:
+        books_in_bookshelf = paginator.page(page)
+    except PageNotAnInteger:
+        books_in_bookshelf = paginator.page(1)
+    except EmptyPage:
+        books_in_bookshelf = paginator.page(paginator.num_pages)
+    
+    return render(request, 'bookshelf.html', {
+        'bookshelf': bookshelf,
+        'books_in_bookshelf': books_in_bookshelf,
+        'books_with_status': books_with_status,
+        'status_choices': status_choices,
+    })
+ 

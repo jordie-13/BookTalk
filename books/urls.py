@@ -14,4 +14,5 @@ urlpatterns = [
      path('remove_from_bookshelf/<slug:slug>/', views.remove_from_bookshelf, name='remove_from_bookshelf'),
      path('bookshelf/', views.bookshelf, name='bookshelf'),
      path('books/filter/', views.filter_books_by_genre, name='filter_books_by_genre'),
+     path('bookshelf/', views.bookshelf, name='bookshelf'),
 ]
