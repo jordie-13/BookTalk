@@ -784,19 +784,25 @@ footer {
     margin-bottom: 50px;
 }
 
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
+    margin-top: 30px;
+}
+
 .profile-settings {
     border: 2px solid #ccc; 
     border-radius: 10px;
     padding: 30px;
+    min-width: 230px;
+    margin-bottom: 30px;
 }
 
 .profile-form{
     max-width: 500px; 
     width: 100%; 
-}
-
-.profile-settings {
-    min-width: 230px;
 }
 
 .profile-books{
@@ -997,17 +1003,6 @@ footer {
     }
 
     /* Profile page styles */
-    .profile-container {
-        display: flex;
-    }
-
-    .profile-settings {
-        margin-right: 5%;
-        border: 2px solid #ccc; 
-        border-radius: 10px;
-        padding: 30px;
-    }
-
     .profile-books{
         display: flex;
         justify-content: space-between; 
@@ -1042,30 +1037,15 @@ footer {
     }
 }
 
-@media (min-width: 768px) and (max-width: 1000px) {
-    /* Profile page stack settings and bookshelf*/
-    .profile-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .profile-settings,
-    .users-bookshelf {
-        margin-bottom: 30px;
-    }
-}
-
-
 /* Media query for large screens (min-width: 992px) */
 @media (min-width: 992px) {
     .col-lg-4 {
-        flex: 0 0 33.3333%; /* Set column width to 33.33% */
-        max-width: 33.3333%; /* Set max width to 33.33% */
+        flex: 0 0 33.3333%; 
+        max-width: 33.3333%; 
     }
 
     .bookshelf-box {
-        margin: 20px; /* Adjust margin between boxes for large screens */
+        margin: 20px; 
         min-width: 290px;
     }
   

@@ -8,7 +8,6 @@
         <div class="user-profile">
             <div class="profile-settings">
                 <h1>User Profile</h1>
-                
                 <form method="post" class="profile-form">
                     <input type="hidden" name="profile_form" value="profile_form">
                     {{ form | crispy }}
@@ -17,115 +16,8 @@
                 </form>
             </div>
         </div>
-
-        <div class="users-bookshelf">
-            <h1 class="mb-3">My Bookshelf</h1>
-            {% if not bookshelf %}
-            <p>There is no books in your bookshelf.</p>
-            {% endif %}
-            <div class="row book-grid">
-                <!-- Create a card display for each book -->
-                {% for book in books_in_bookshelf %}
-                <!-- use full container width -->
-                <div class="col-lg-12 col-md-12 col-sm-12 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="profile-books">
-                                <a href="{% url 'book_detail' book.slug %}" class="book-link no-underline">
-                                    <div class="d-flex">
-                                        <!-- Use a default book cover image if no image was uploaded so defaulted to placeholder -->
-                                        <div class="image-container me-3">
-                                            {% if book.cover_image.url == 'https://res.cloudinary.com/dxtaxsd1v/image/upload/placeholder' %}
-                                            <img class="img-fluid" src="{% static "images/book_default.jpg" %} %}" alt="placeholder Image" style="max-width: 100px;">
-                                            {% else %}
-                                            <img class="img-fluid" src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="max-width: 100px;">
-                                            {% endif %}
-                                        </div>
-                                        <!-- Display basic book details -->
-                                        <div class="flex-grow-1">
-                                            <h4 class="title mb-1">{{ book.title }}</h4>
-                                            <p class="author mb-1">Author: {{ book.author }}</p>
-                                            <p class="card-text text-muted h6 mb-0">Published in: {{ book.published_year }}</p>
-                                        </div>
-                                    </div>
-                                </a>
-                                <hr class="breakline">
-                                <div class="bookshelf-interactions">
-                                    <div class="bookshelf-form-container">
-                                        
-                                        <!-- Form to update the status -->
-                                        <form class="status-form status-form-left" method="post" action="{% url 'profile' %}">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="book_slug" value="{{ book.slug }}">
-                                            <input type="hidden" name="status_form" value="status_form">
-
-                                            {% for item in books_with_status %}
-                                                {% if item.book.slug == book.slug %}
-                                                    <p class="current-status">Status: {{ item.status }}</p>
-                                                {% endif %}
-                                            {% endfor %}
-
-                                            <select name="status" class="form-control mb-2 status-select">
-                                                <option value="" disabled selected>Set Status ▼</option>
-                                                {% for item in books_with_status %}
-                                                    {% if item.book.slug == book.slug %}
-                                                        {% for status_choice in status_choices %}
-                                                            <option value="{{ status_choice.0 }}" {% if book.bookshelf.status == status_choice.0 %}selected{% endif %}>
-                                                                {{ status_choice.1 }}
-                                                            </option>
-                                                        {% endfor %}
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </select>
-                                        </form>
-                                        
-                                        <form class="remove-book-form status-form-right" method="post" action="{% url 'remove_from_bookshelf' book.slug %}">
-                                            {% csrf_token %}
-                                            <button class="btn btn-secondary mb-3" type="submit">Remove Book</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>    
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-
-            <!-- Pagination Controls -->
-            {% if books_in_bookshelf.paginator.num_pages > 1 %}
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        <!-- Previous page link -->
-                        {% if books_in_bookshelf.has_previous %}
-                        <li class="page-item">
-                            <a href="?page={{ books_in_bookshelf.previous_page_number }}" class="page-link paginate-button"> &laquo; PREV </a>
-                        </li>
-                        {% endif %}
-
-                        <!-- Next page link -->
-                        {% if books_in_bookshelf.has_next %}
-                        <li class="page-item">
-                            <a href="?page={{ books_in_bookshelf.next_page_number }}" class="page-link paginate-button"> NEXT &raquo;</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </nav>
-            {% endif %}
-        </div>
     </div>
 </div>
-
-<!-- JS for status dropdown form to submit without a button -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.status-select').forEach(function(select) {
-            select.addEventListener('change', function() {
-                this.form.submit();
-            });
-        });
-    });
-</script>
 
 {% endblock %}
 
