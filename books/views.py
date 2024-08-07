@@ -355,7 +355,7 @@ def bookshelf(request):
         })
     
     # Pagination
-    paginator = Paginator(books_in_bookshelf, 4)
+    paginator = Paginator(books_in_bookshelf, 10)
     page = request.GET.get('page')
     try:
         books_in_bookshelf = paginator.page(page)

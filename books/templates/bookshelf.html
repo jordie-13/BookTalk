@@ -40,7 +40,7 @@
                                 <div class="bookshelf-form-container">
                                     
                                     <!-- Form to update the status -->
-                                    <form class="status-form status-form-left" method="post" action="{% url 'profile' %}">
+                                    <form class="status-form status-form-left" method="post" action="{% url 'bookshelf' %}">
                                         {% csrf_token %}
                                         <input type="hidden" name="book_slug" value="{{ book.slug }}">
                                         <input type="hidden" name="status_form" value="status_form">
