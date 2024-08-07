@@ -354,6 +354,12 @@ def bookshelf(request):
             'status': entry.get_status_display(),
         })
     
+    # Calc the number of books in users bookshelf
+    bookshelf_total = len(bookshelf)
+
+    # Calculate the number of books the user has marked as read
+    books_read_total = bookshelf.filter(status='read').count()
+
     # Pagination
     paginator = Paginator(books_in_bookshelf, 10)
     page = request.GET.get('page')
@@ -367,6 +373,8 @@ def bookshelf(request):
     return render(request, 'bookshelf.html', {
         'bookshelf': bookshelf,
         'books_in_bookshelf': books_in_bookshelf,
+        'bookshelf_total': bookshelf_total,
+        'books_read_total': books_read_total,
         'books_with_status': books_with_status,
         'status_choices': status_choices,
     })
