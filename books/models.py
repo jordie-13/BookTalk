@@ -151,6 +151,7 @@ class Bookshelf(models.Model):
     notes = models.TextField(max_length=1000, blank=True, null=True)
     quotes = models.TextField(max_length=1000, blank=True, null=True)
     added_on = models.DateTimeField(auto_now_add=True)
+    date_read = models.DateField(null=True, blank=True)
 
     class Meta:
         unique_together = ('user', 'book')  # Ensure each book can only be added once per user
