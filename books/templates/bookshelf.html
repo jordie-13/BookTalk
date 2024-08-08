@@ -14,7 +14,14 @@
             {% for book in books_in_bookshelf %}
             <!-- use full container width -->
             <div class="col-lg-12 col-md-12 col-sm-12 mb-4">
-                <div class="card">
+                <div class="card" data-bs-toggle="modal" 
+                data-bs-target="#bookModal" 
+                data-book-title="{{ book.title }}" 
+                data-book-author="{{ book.author }}" 
+                data-book-genre="{{ book.genre.name }}" 
+                data-book-slug="{{ book.slug }}"
+                data-book-status="{% for item in books_with_status %}{% if item.book.slug == book.slug %}{{ item.status }}{% endif %}{% endfor %}"
+                >
                     <div class="card-body">
                         <div class="profile-books">
                             <a href="{% url 'book_detail' book.slug %}" class="book-link no-underline">
@@ -38,33 +45,12 @@
                             <hr class="breakline">
                             <div class="bookshelf-interactions">
                                 <div class="bookshelf-form-container">
-                                    
-                                    <!-- Form to update the status -->
-                                    <form class="status-form status-form-left" method="post" action="{% url 'bookshelf' %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="book_slug" value="{{ book.slug }}">
-                                        <input type="hidden" name="status_form" value="status_form">
+                                    {% for item in books_with_status %}
+                                        {% if item.book.slug == book.slug %}
+                                            <p class="current-status">Status: {{ item.status }}</p>
+                                        {% endif %}
+                                    {% endfor %}
 
-                                        {% for item in books_with_status %}
-                                            {% if item.book.slug == book.slug %}
-                                                <p class="current-status">Status: {{ item.status }}</p>
-                                            {% endif %}
-                                        {% endfor %}
-
-                                        <select name="status" class="form-control mb-2 status-select">
-                                            <option value="" disabled selected>Set Status ▼</option>
-                                            {% for item in books_with_status %}
-                                                {% if item.book.slug == book.slug %}
-                                                    {% for status_choice in status_choices %}
-                                                        <option value="{{ status_choice.0 }}" {% if book.bookshelf.status == status_choice.0 %}selected{% endif %}>
-                                                            {{ status_choice.1 }}
-                                                        </option>
-                                                    {% endfor %}
-                                                {% endif %}
-                                            {% endfor %}
-                                        </select>
-                                    </form>
-                                    
                                     <form class="remove-book-form status-form-right" method="post" action="{% url 'remove_from_bookshelf' book.slug %}">
                                         {% csrf_token %}
                                         <button class="btn btn-secondary mb-3" type="submit">Remove Book</button>
@@ -115,12 +101,69 @@
     </div>
 </div>
 
+<!-- Modal Structure -->
+<div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="bookModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bookModalLabel">Book Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Title:</strong> <span id="modalBookTitle"></span></p>
+                <p><strong>Author:</strong> <span id="modalBookAuthor"></span></p>
+                <p><strong>Genre:</strong> <span id="modalBookGenre"></span></p>
+                <p><strong>Status:</strong> <span id="modalBookStatus"></span></p>
+                <hr>
+                <!-- Form to update the status -->
+                <form class="status-form status-form-left" method="post" action="{% url 'bookshelf' %}">
+                    {% csrf_token %}
+                    <input type="hidden" id="modalBookSlug" name="book_slug">
+                    <input type="hidden" name="status_form" value="status_form">
+
+                    <select name="status" class="form-control mb-2 status-select">
+                        <option value="" disabled selected>Set Status ▼</option>
+                            {% for status_choice in status_choices %}
+                                <option value="{{ status_choice.0 }}">
+                                    {{ status_choice.1 }}
+                                </option>
+                            {% endfor %}
+                    </select>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- JS for status dropdown form to submit without a button -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.status-select').forEach(function(select) {
             select.addEventListener('change', function() {
                 this.form.submit();
+            });
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = new bootstrap.Modal(document.getElementById('bookModal'));
+        
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function() {
+                const title = this.getAttribute('data-book-title');
+                const author = this.getAttribute('data-book-author');
+                const genre = this.getAttribute('data-book-genre');
+                const slug = this.getAttribute('data-book-slug'); 
+                const status = this.getAttribute('data-book-status');
+    
+                document.getElementById('modalBookTitle').innerText = title;
+                document.getElementById('modalBookAuthor').innerText = author;
+                document.getElementById('modalBookGenre').innerText = genre;
+                document.getElementById('modalBookSlug').value = slug; 
+                document.getElementById('modalBookStatus').innerText = status;
+    
+                modal.show();
             });
         });
     });
