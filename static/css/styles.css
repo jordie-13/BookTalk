@@ -831,6 +831,7 @@ footer {
 
 .status-form {
     display: inline-block; 
+    width: 100%
 }
 
 .status-select {

@@ -24,24 +24,23 @@
                 >
                     <div class="card-body">
                         <div class="profile-books">
-                            <a href="{% url 'book_detail' book.slug %}" class="book-link no-underline">
-                                <div class="d-flex">
-                                    <!-- Use a default book cover image if no image was uploaded so defaulted to placeholder -->
-                                    <div class="image-container me-3">
-                                        {% if book.cover_image.url == 'https://res.cloudinary.com/dmnnucsdm/image/upload/placeholder' %}
-                                        <img class="img-fluid" src="{% static 'images/book_default.jpg' %}" alt="placeholder Image" style="max-width: 100px;">
-                                        {% else %}
-                                        <img class="img-fluid" src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="max-width: 100px;">
-                                        {% endif %}
-                                    </div>
-                                    <!-- Display basic book details -->
-                                    <div class="flex-grow-1">
-                                        <h4 class="title mb-1">{{ book.title }}</h4>
-                                        <p class="author mb-1">Author: {{ book.author }}</p>
-                                        <p class="card-text text-muted h6 mb-0">Published in: {{ book.published_year }}</p>
-                                    </div>
+                            <div class="d-flex">
+                                <!-- Use a default book cover image if no image was uploaded so defaulted to placeholder -->
+                                <div class="image-container me-3">
+                                    {% if book.cover_image.url == 'https://res.cloudinary.com/dmnnucsdm/image/upload/placeholder' %}
+                                    <img class="img-fluid" src="{% static 'images/book_default.jpg' %}" alt="placeholder Image" style="max-width: 100px;">
+                                    {% else %}
+                                    <img class="img-fluid" src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="max-width: 100px;">
+                                    {% endif %}
                                 </div>
-                            </a>
+                                <!-- Display basic book details -->
+                                <div class="flex-grow-1">
+                                    <h4 class="title mb-1">{{ book.title }}</h4>
+                                    <p class="author mb-1">Author: {{ book.author }}</p>
+                                    <p class="card-text text-muted h6 mb-0">Published in: {{ book.published_year }}</p>
+                                </div>
+                            </div>
+                            
                             <hr class="breakline">
                             <div class="bookshelf-interactions">
                                 <div class="bookshelf-form-container">
@@ -110,25 +109,33 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <!-- Basic book details -->
                 <p><strong>Title:</strong> <span id="modalBookTitle"></span></p>
                 <p><strong>Author:</strong> <span id="modalBookAuthor"></span></p>
                 <p><strong>Genre:</strong> <span id="modalBookGenre"></span></p>
-                <p><strong>Status:</strong> <span id="modalBookStatus"></span></p>
+
+                <!-- Link to the books detail page -->
+                <a id="BookDetailLink" class="btn btn-secondary" href="" target="_blank">View Book Details</a>
                 <hr>
+
                 <!-- Form to update the status -->
                 <form class="status-form status-form-left" method="post" action="{% url 'bookshelf' %}">
                     {% csrf_token %}
                     <input type="hidden" id="modalBookSlug" name="book_slug">
                     <input type="hidden" name="status_form" value="status_form">
-
-                    <select name="status" class="form-control mb-2 status-select">
-                        <option value="" disabled selected>Set Status ▼</option>
+                
+                    <div class="d-flex align-items-center justify-content-between">
+                        <p class="mb-0"><strong>Status:</strong> <span id="modalBookStatus"></span></p>
+                        
+                        <select name="status" class="form-control mb-2 status-select" style="width: auto;">
+                            <option value="" disabled selected>Change Status ▼</option>
                             {% for status_choice in status_choices %}
                                 <option value="{{ status_choice.0 }}">
                                     {{ status_choice.1 }}
                                 </option>
                             {% endfor %}
-                    </select>
+                        </select>
+                    </div>
                 </form>
             </div>
         </div>
@@ -148,21 +155,29 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const modal = new bootstrap.Modal(document.getElementById('bookModal'));
-        
+
+        // Select all card elements
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', function() {
+                // Get data attributes from the clicked card
                 const title = this.getAttribute('data-book-title');
                 const author = this.getAttribute('data-book-author');
                 const genre = this.getAttribute('data-book-genre');
                 const slug = this.getAttribute('data-book-slug'); 
                 const status = this.getAttribute('data-book-status');
-    
+
+                // Update modal content
                 document.getElementById('modalBookTitle').innerText = title;
                 document.getElementById('modalBookAuthor').innerText = author;
                 document.getElementById('modalBookGenre').innerText = genre;
                 document.getElementById('modalBookSlug').value = slug; 
                 document.getElementById('modalBookStatus').innerText = status;
-    
+
+                // Update the link to the book detail page
+                const detailLink = document.getElementById('BookDetailLink');
+                detailLink.href = `/books/${slug}/`; 
+                
+                // Show the modal
                 modal.show();
             });
         });
