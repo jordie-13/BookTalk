@@ -356,6 +356,20 @@ def bookshelf(request):
     books_read_total = bookshelf.filter(status='read').count()
     current_year = datetime.now().year
     books_read_this_year = bookshelf.filter(status='read', date_read__year=current_year).count()
+
+    # Calculate most read genre
+    most_read_genre = (
+        bookshelf.filter(status='read')
+        .values('book__genre__name')
+        .annotate(genre_count=Count('book__genre'))
+        .order_by('-genre_count')
+        .first()
+    )
+
+    if most_read_genre:
+        most_read_genre_name = most_read_genre['book__genre__name']
+    else:
+        most_read_genre_name = None
    
     # Prepare a list of dictionaries with book and status
     books_with_status = []
@@ -381,6 +395,7 @@ def bookshelf(request):
         'bookshelf_total': bookshelf_total,
         'books_read_total': books_read_total,
         'books_read_this_year': books_read_this_year,
+        'most_read_genre_name': most_read_genre_name,
         'books_with_status': books_with_status,
         'status_choices': status_choices,
     })

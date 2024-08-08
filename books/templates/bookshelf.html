@@ -83,9 +83,12 @@
             <h1 class="mb-3">My Stats</h1>
             <p>Books in bookshelf: {{ bookshelf_total }}</p>
             <p>Books read: {{ books_read_total }} </p>
-            <p>Favourite Genre</p>
+            {% if most_read_genre_name %}
+                <p>Most read genre: {{ most_read_genre_name }}</p>
+            {% else %}
+                <p>Most read genre: No books read yet</p>
+            {% endif %}
             <p>Books read this year: {{ books_read_this_year }}</p>
-            <p>My yearly Goal: </p>
 
         </div>
 
