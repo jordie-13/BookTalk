@@ -360,18 +360,16 @@ def bookshelf(request):
     # Post request in book notes form
     if request.method == 'POST' and 'notes_form' in request.POST:
         book_slug = request.POST.get('book_slug')
-        notes = request.POST.get('notes')
-        book = get_object_or_404(Book, slug=book_slug)
-        bookshelf_entry = get_object_or_404(Bookshelf, book=book, user=request.user)
-        
+        notes = request.POST.get('notes')        
         # Check to ensure users note are not greater than 1000 char
         if len(notes) > 1000:
             messages.add_message(request, messages.ERROR, 'Notes cannot exceed 1000 characters.')
-            return redirect('bookshelf')
-        
-        bookshelf_entry.notes = notes
-        bookshelf_entry.save()
-        messages.add_message(request, messages.SUCCESS, 'Notes updated Successfully!')
+        else:
+            book = get_object_or_404(Book, slug=book_slug)
+            bookshelf_entry = get_object_or_404(Bookshelf, book=book, user=request.user)
+            bookshelf_entry.notes = notes
+            bookshelf_entry.save()
+            messages.success(request, 'Notes updated Successfully!')
         return redirect('bookshelf')
 
     # Calculate most read genre

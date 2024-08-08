@@ -3,7 +3,21 @@
 {% block content %}
 {% load crispy_forms_tags %}
 
-<div class="container mt-3">
+<div class="container mt-3"> 
+    <!-- Users statistics -->
+    <div class="user-statistics">
+        <h1 class="mb-3">My Stats</h1>
+        <p>Books in bookshelf: {{ bookshelf_total }}</p>
+        <p>Books read: {{ books_read_total }} </p>
+        {% if most_read_genre_name %}
+            <p>Most read genre: {{ most_read_genre_name }}</p>
+        {% else %}
+            <p>Most read genre: No books read yet</p>
+        {% endif %}
+        <p>Books read this year: {{ books_read_this_year }}</p>
+    </div>
+
+    <!-- Users bookshelf -->
     <div class="users-bookshelf">
         <h1 class="mb-3">My Bookshelf</h1>
         {% if not bookshelf %}
@@ -108,7 +122,7 @@
                                 <input type="hidden" name="notes_form" value="notes_form">
                                 <div class="notes-input">
                                     <p class="mb-2"><strong>Notes:</strong> <span id="modalBookStatus"></span></p>
-                                    <textarea id="modalBookNotes{{ book.slug }}" name="notes" class="form-control" rows="3" readonly></textarea>
+                                    <textarea id="modalBookNotes{{ book.slug }}" name="notes" class="form-control" rows="3" readonly>{{ notes|safe }}</textarea>
                                     <button id="editNotesButton" type="button" class="btn btn-secondary mt-2">Edit Notes</button>
                                     <button id="saveNotesButton" type="submit" class="btn btn-secondary mt-2 d-none">Save Notes</button>
                                 </div>
@@ -118,20 +132,6 @@
                 </div>
             </div>
             {% endfor %}
-        </div>
-
-        <!-- Users statistics -->
-        <div class="user-statistics">
-            <h1 class="mb-3">My Stats</h1>
-            <p>Books in bookshelf: {{ bookshelf_total }}</p>
-            <p>Books read: {{ books_read_total }} </p>
-            {% if most_read_genre_name %}
-                <p>Most read genre: {{ most_read_genre_name }}</p>
-            {% else %}
-                <p>Most read genre: No books read yet</p>
-            {% endif %}
-            <p>Books read this year: {{ books_read_this_year }}</p>
-
         </div>
 
         <!-- Pagination Controls -->

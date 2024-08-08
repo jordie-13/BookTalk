@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById(`modalBookStatus${slug}`).innerText = status;
             document.getElementById(`modalBookNotes${slug}`).value = notes;
 
+            console.log(notes);
+
             const detailLink = document.getElementById(`BookDetailLink${slug}`);
             detailLink.href = `/books/${slug}/`;
 
