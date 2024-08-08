@@ -5,8 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponseRedirect, JsonResponse
 from django.db.models import Q, Avg, Count
+from datetime import datetime
 from .models import Book, Comment, Rating, Bookshelf, Genre
 from .forms import CommentForm, RatingForm, BookSearchForm
+
 
 class BookList(generic.ListView):
     model = Book
@@ -330,22 +332,31 @@ def remove_from_bookshelf(request, slug):
 
 @login_required
 def bookshelf(request):
+    # Collect basic initial data
     bookshelf = Bookshelf.objects.filter(user=request.user)
+    status_choices = Bookshelf.STATUS_CHOICES
+    books_in_bookshelf = Book.objects.filter(bookshelf__in=bookshelf)
 
-    # Post request in status form 
+    # Post request in book status form 
     if request.method == 'POST' and 'status_form' in request.POST:
         book_slug = request.POST.get('book_slug')
         status = request.POST.get('status')
         book = get_object_or_404(Book, slug=book_slug)
-        bookshelf = get_object_or_404(Bookshelf, book=book, user=request.user)
-        bookshelf.status = status
-        bookshelf.save()
+        bookshelf_entry = get_object_or_404(Bookshelf, book=book, user=request.user)
+        bookshelf_entry.status = status
+        if status == 'read':
+            bookshelf_entry.date_read = datetime.now().date()
+        else:
+            bookshelf_entry.date_read = None
+        bookshelf_entry.save()
         return redirect('bookshelf')
     
-    bookshelf = Bookshelf.objects.filter(user=request.user)
-    status_choices = Bookshelf.STATUS_CHOICES
-    books_in_bookshelf = Book.objects.filter(bookshelf__in=bookshelf)
-    
+    # Calculate statistics
+    bookshelf_total = len(bookshelf)
+    books_read_total = bookshelf.filter(status='read').count()
+    current_year = datetime.now().year
+    books_read_this_year = bookshelf.filter(status='read', date_read__year=current_year).count()
+   
     # Prepare a list of dictionaries with book and status
     books_with_status = []
     for entry in bookshelf:
@@ -354,12 +365,6 @@ def bookshelf(request):
             'status': entry.get_status_display(),
         })
     
-    # Calc the number of books in users bookshelf
-    bookshelf_total = len(bookshelf)
-
-    # Calculate the number of books the user has marked as read
-    books_read_total = bookshelf.filter(status='read').count()
-
     # Pagination
     paginator = Paginator(books_in_bookshelf, 10)
     page = request.GET.get('page')
@@ -375,6 +380,7 @@ def bookshelf(request):
         'books_in_bookshelf': books_in_bookshelf,
         'bookshelf_total': bookshelf_total,
         'books_read_total': books_read_total,
+        'books_read_this_year': books_read_this_year,
         'books_with_status': books_with_status,
         'status_choices': status_choices,
     })
