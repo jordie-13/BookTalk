@@ -336,6 +336,12 @@ def bookshelf(request):
     bookshelf = Bookshelf.objects.filter(user=request.user)
     status_choices = Bookshelf.STATUS_CHOICES
     books_in_bookshelf = Book.objects.filter(bookshelf__in=bookshelf)
+        
+    # Calculate statistics
+    bookshelf_total = len(bookshelf)
+    books_read_total = bookshelf.filter(status='read').count()
+    current_year = datetime.now().year
+    books_read_this_year = bookshelf.filter(status='read', date_read__year=current_year).count()
 
     # Post request in book status form 
     if request.method == 'POST' and 'status_form' in request.POST:
@@ -351,11 +357,22 @@ def bookshelf(request):
         bookshelf_entry.save()
         return redirect('bookshelf')
     
-    # Calculate statistics
-    bookshelf_total = len(bookshelf)
-    books_read_total = bookshelf.filter(status='read').count()
-    current_year = datetime.now().year
-    books_read_this_year = bookshelf.filter(status='read', date_read__year=current_year).count()
+    # Post request in book notes form
+    if request.method == 'POST' and 'notes_form' in request.POST:
+        book_slug = request.POST.get('book_slug')
+        notes = request.POST.get('notes')
+        book = get_object_or_404(Book, slug=book_slug)
+        bookshelf_entry = get_object_or_404(Bookshelf, book=book, user=request.user)
+        
+        # Check to ensure users note are not greater than 1000 char
+        if len(notes) > 1000:
+            messages.add_message(request, messages.ERROR, 'Notes cannot exceed 1000 characters.')
+            return redirect('bookshelf')
+        
+        bookshelf_entry.notes = notes
+        bookshelf_entry.save()
+        messages.add_message(request, messages.SUCCESS, 'Notes updated Successfully!')
+        return redirect('bookshelf')
 
     # Calculate most read genre
     most_read_genre = (
@@ -371,12 +388,13 @@ def bookshelf(request):
     else:
         most_read_genre_name = None
    
-    # Prepare a list of dictionaries with book and status
+    # Prepare a list of dictionaries with bookshelf books user notes/status
     books_with_status = []
     for entry in bookshelf:
         books_with_status.append({
             'book': entry.book,
             'status': entry.get_status_display(),
+            'notes': entry.notes or '',
         })
     
     # Pagination
@@ -399,4 +417,3 @@ def bookshelf(request):
         'books_with_status': books_with_status,
         'status_choices': status_choices,
     })
- 
