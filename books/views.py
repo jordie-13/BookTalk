@@ -371,6 +371,21 @@ def bookshelf(request):
             bookshelf_entry.save()
             messages.success(request, 'Notes updated Successfully!')
         return redirect('bookshelf')
+    
+    # Post request in book quotes form
+    if request.method == 'POST' and 'quotes_form' in request.POST:
+        book_slug = request.POST.get('book_slug')
+        quotes = request.POST.get('quotes')        
+        # Check to ensure users quotes are not greater than 1000 char
+        if len(quotes) > 1000:
+            messages.add_message(request, messages.ERROR, 'Quotes cannot exceed 1000 characters.')
+        else:
+            book = get_object_or_404(Book, slug=book_slug)
+            bookshelf_entry = get_object_or_404(Bookshelf, book=book, user=request.user)
+            bookshelf_entry.quotes = quotes
+            bookshelf_entry.save()
+            messages.success(request, 'Notes updated Successfully!')
+        return redirect('bookshelf')
 
     # Calculate most read genre
     most_read_genre = (
@@ -393,6 +408,7 @@ def bookshelf(request):
             'book': entry.book,
             'status': entry.get_status_display(),
             'notes': entry.notes or '',
+            'quotes': entry.quotes or '',
         })
     
     # Pagination
