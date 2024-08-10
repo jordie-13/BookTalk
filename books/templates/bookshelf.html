@@ -35,7 +35,8 @@
                 data-book-genre="{{ book.genre.name }}" 
                 data-book-slug="{{ book.slug }}"
                 data-book-status="{% for item in books_with_status %}{% if item.book.slug == book.slug %}{{ item.status }}{% endif %}{% endfor %}"
-                data-book-notes="{% for item in books_with_status %}{% if item.book.slug == book.slug %}{{ item.notes|escapejs }}{% endif %}{% endfor %}"
+                data-book-notes="{% for item in books_with_status %}{% if item.book.slug == book.slug %}{{ item.notes|safe }}{% endif %}{% endfor %}"
+                data-book-quotes="{% for item in books_with_status %}{% if item.book.slug == book.slug %}{{ item.quotes|safe }}{% endif %}{% endfor %}"
                 >
                     <div class="card-body">
                         <div class="profile-books">
@@ -122,7 +123,7 @@
                                 <input type="hidden" name="notes_form" value="notes_form">
                                 <div class="notes-input">
                                     <p class="mb-2"><strong>Notes:</strong> <span id="modalBookNotes"></span></p>
-                                    <textarea id="modalBookNotes{{ book.slug }}" name="notes" class="form-control" rows="3" readonly>{{ notes|safe }}</textarea>
+                                    <textarea id="modalBookNotes{{ book.slug }}" name="notes" class="form-control" rows="3" readonly>{{ notes }}</textarea>
                                     <button id="editNotesButton" type="button" class="btn btn-secondary mt-2">Edit Notes</button>
                                     <button id="saveNotesButton" type="submit" class="btn btn-secondary mt-2 d-none">Save Notes</button>
                                 </div>
@@ -136,7 +137,7 @@
                                 <input type="hidden" name="quotes_form" value="quotes_form">
                                 <div class="quotes-input">
                                     <p class="mb-2"><strong>Quotes:</strong> <span id="modalBookQuotes"></span></p>
-                                    <textarea id="modalBookQuotes{{ book.slug }}" name="quotes" class="form-control" rows="3" readonly>{{ quotes|safe }}</textarea>
+                                    <textarea id="modalBookQuotes{{ book.slug }}" name="quotes" class="form-control" rows="3" readonly>{{ quotes }}</textarea>
                                     <button id="editQuotesButton" type="button" class="btn btn-secondary mt-2">Edit Quotes</button>
                                     <button id="saveQuotesButton" type="submit" class="btn btn-secondary mt-2 d-none">Save Quotes</button>
                                 </div>
