@@ -121,10 +121,24 @@
                                 <input type="hidden" id="modalBookSlug{{ book.slug }}" name="book_slug" value="{{ book.slug }}">
                                 <input type="hidden" name="notes_form" value="notes_form">
                                 <div class="notes-input">
-                                    <p class="mb-2"><strong>Notes:</strong> <span id="modalBookStatus"></span></p>
+                                    <p class="mb-2"><strong>Notes:</strong> <span id="modalBookNotes"></span></p>
                                     <textarea id="modalBookNotes{{ book.slug }}" name="notes" class="form-control" rows="3" readonly>{{ notes|safe }}</textarea>
                                     <button id="editNotesButton" type="button" class="btn btn-secondary mt-2">Edit Notes</button>
                                     <button id="saveNotesButton" type="submit" class="btn btn-secondary mt-2 d-none">Save Notes</button>
+                                </div>
+                            </form>
+                            <hr>
+
+                            <!-- Form to update the user quotes -->
+                            <form class="quotes-form" method="post" action="{% url 'bookshelf' %}">
+                                {% csrf_token %}
+                                <input type="hidden" id="modalBookSlug{{ book.slug }}" name="book_slug" value="{{ book.slug }}">
+                                <input type="hidden" name="quotes_form" value="quotes_form">
+                                <div class="quotes-input">
+                                    <p class="mb-2"><strong>Quotes:</strong> <span id="modalBookQuotes"></span></p>
+                                    <textarea id="modalBookQuotes{{ book.slug }}" name="quotes" class="form-control" rows="3" readonly>{{ quotes|safe }}</textarea>
+                                    <button id="editQuotesButton" type="button" class="btn btn-secondary mt-2">Edit Quotes</button>
+                                    <button id="saveQuotesButton" type="submit" class="btn btn-secondary mt-2 d-none">Save Quotes</button>
                                 </div>
                             </form>
                         </div>
